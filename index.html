@@ -1,0 +1,316 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#111827">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="84天成长">
+<title>84天成长计划</title>
+<style>
+:root {
+  --bg:#f5f6f8; --card:#ffffff; --text:#17181b; --sub:#6c727f; --line:#e7e9ee;
+  --accent:#111827; --accent2:#374151; --good:#0f766e; --goodbg:#ecfdf5; --warn:#92400e;
+  --nav:#ffffffee; --shadow:0 10px 30px rgba(0,0,0,.06);
+}
+html.dark {
+  --bg:#0f1115; --card:#171a20; --text:#f4f4f5; --sub:#a1a1aa; --line:#2a2e36;
+  --accent:#f4f4f5; --accent2:#d4d4d8; --good:#5eead4; --goodbg:#102824; --warn:#fbbf24;
+  --nav:#171a20ee; --shadow:none;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.55;padding-bottom:90px}
+.app{max-width:760px;margin:auto}
+.top{padding:18px 16px 8px}
+.brand{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.brand h1{font-size:23px;margin:0}
+.subtitle{font-size:13px;color:var(--sub);margin-top:4px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:16px;margin:12px 14px;box-shadow:var(--shadow)}
+.hero{padding:20px}
+.kicker{font-size:12px;color:var(--sub);text-transform:uppercase;letter-spacing:.06em}
+.hero h2{font-size:27px;line-height:1.25;margin:7px 0 8px}
+.muted{color:var(--sub)}
+.progress{height:10px;background:var(--line);border-radius:999px;overflow:hidden;margin:12px 0 7px}
+.progress > i{display:block;height:100%;background:var(--accent);width:0;border-radius:999px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
+.stat{background:var(--bg);border-radius:14px;padding:11px}
+.stat b{display:block;font-size:20px}
+.stat span{font-size:11px;color:var(--sub)}
+.section-title{font-size:14px;color:var(--sub);font-weight:700;margin:20px 16px 6px}
+.task-title{font-size:21px;font-weight:800;margin:4px 0}
+.info{background:var(--bg);border-radius:14px;padding:12px;margin-top:10px}
+.info b{display:block;font-size:12px;color:var(--sub);margin-bottom:4px}
+button,.btn{appearance:none;border:0;border-radius:14px;padding:12px 14px;font-weight:700;font-size:14px;background:var(--accent);color:var(--bg);cursor:pointer}
+button.secondary{background:var(--bg);color:var(--text);border:1px solid var(--line)}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+textarea,input,select{width:100%;border:1px solid var(--line);background:var(--bg);color:var(--text);border-radius:13px;padding:11px 12px;font:inherit}
+textarea{min-height:90px;resize:vertical}
+.done-card{border-color:transparent;background:var(--goodbg)}
+.day-list{padding:0;margin:0;list-style:none}
+.day-item{display:flex;align-items:flex-start;gap:12px;padding:14px 0;border-bottom:1px solid var(--line)}
+.day-item:last-child{border-bottom:0}
+.check{width:26px;height:26px;border:2px solid var(--line);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:0 0 auto;margin-top:1px;cursor:pointer}
+.check.on{background:var(--accent);border-color:var(--accent);color:var(--bg)}
+.day-main{flex:1;min-width:0}
+.day-name{font-weight:750}
+.day-meta{font-size:12px;color:var(--sub);margin-top:2px}
+.week-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+.week-head h3{margin:0;font-size:18px}
+.badge{font-size:11px;padding:4px 8px;border-radius:999px;background:var(--bg);color:var(--sub);white-space:nowrap}
+details{border-top:1px solid var(--line);padding-top:10px;margin-top:10px}
+summary{cursor:pointer;color:var(--sub);font-size:13px}
+.search{margin:0 14px 12px;width:calc(100% - 28px)}
+.tabs{position:fixed;left:0;right:0;bottom:0;background:var(--nav);backdrop-filter:blur(18px);border-top:1px solid var(--line);display:flex;justify-content:center;z-index:20;padding-bottom:env(safe-area-inset-bottom)}
+.tabs-inner{width:min(760px,100%);display:grid;grid-template-columns:repeat(5,1fr)}
+.tab{padding:9px 4px 8px;text-align:center;font-size:11px;color:var(--sub);cursor:pointer}
+.tab .ico{font-size:20px;display:block;line-height:1.2}
+.tab.active{color:var(--text);font-weight:700}
+.page{display:none}
+.page.active{display:block}
+.milestone{display:grid;grid-template-columns:34px 1fr;gap:10px;padding:11px 0;border-bottom:1px solid var(--line)}
+.milestone:last-child{border-bottom:0}
+.dot{width:28px;height:28px;border-radius:50%;background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800}
+.dot.ok{background:var(--accent);color:var(--bg)}
+.row{display:flex;gap:9px;align-items:center}
+.row > *{flex:1}
+label{font-size:12px;color:var(--sub);display:block;margin:10px 0 5px}
+.small{font-size:12px;color:var(--sub)}
+.hidden{display:none!important}
+.toast{position:fixed;left:50%;bottom:92px;transform:translateX(-50%);background:var(--text);color:var(--bg);padding:9px 13px;border-radius:12px;font-size:13px;opacity:0;pointer-events:none;transition:.2s;z-index:40}
+.toast.show{opacity:1}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="top">
+    <div class="brand"><div><h1>84 天成长</h1><div class="subtitle">从“会一点”到“有作品、有方向、能求职”</div></div><button class="secondary" id="themeBtn" style="padding:9px 11px">◐</button></div>
+  </div>
+
+  <section class="page active" id="today">
+    <div class="card hero">
+      <div class="kicker" id="todayKicker">TODAY</div>
+      <h2 id="todayTitle">加载中…</h2>
+      <div class="muted" id="todayWeek"></div>
+      <div class="progress"><i id="todayProgress"></i></div>
+      <div class="stats">
+        <div class="stat"><b id="statDone">0</b><span>已完成</span></div>
+        <div class="stat"><b id="statLeft">84</b><span>剩余</span></div>
+        <div class="stat"><b id="statPct">0%</b><span>总进度</span></div>
+      </div>
+    </div>
+
+    <div class="section-title">今天只做这一格</div>
+    <div class="card" id="todayCard">
+      <div class="kicker" id="todayDay">DAY 1</div>
+      <div class="task-title" id="todayTask"></div>
+      <div class="info"><b>今天学习</b><span id="todayLearn"></span></div>
+      <div class="info"><b>完成标准</b><span id="todayDeliver"></span></div>
+      <label>今天的记录 / 卡点 / 成果链接</label>
+      <textarea id="todayNote" placeholder="例如：已完成第一段代码；卡在虚拟环境；GitHub 链接……"></textarea>
+      <div class="actions"><button id="completeToday">完成今天</button><button class="secondary" id="delayOne">计划顺延 1 天</button></div>
+    </div>
+  </section>
+
+  <section class="page" id="plan">
+    <input class="search" id="search" placeholder="搜索 Python / Git / AI / ROS2 / 测试…">
+    <div id="weekList"></div>
+  </section>
+
+  <section class="page" id="projects">
+    <div class="section-title">核心项目</div>
+    <div class="card">
+      <div class="week-head"><h3>PrintDoctor</h3><span class="badge">主项目</span></div>
+      <p class="muted">从命令行诊断工具，逐步升级为带网页、AI、多模态图片诊断和用户反馈的 3D 打印新手辅助工具。</p>
+      <div class="milestone"><div class="dot" data-day="7">1</div><div><b>V0.1</b><div class="small">基础命令行诊断</div></div></div>
+      <div class="milestone"><div class="dot" data-day="14">2</div><div><b>V0.2</b><div class="small">GitHub + 结构化项目</div></div></div>
+      <div class="milestone"><div class="dot" data-day="28">3</div><div><b>V1.0</b><div class="small">网页工具 + 首次公开展示</div></div></div>
+      <div class="milestone"><div class="dot" data-day="42">4</div><div><b>V1.5</b><div class="small">AI 诊断 + 反馈机制</div></div></div>
+      <div class="milestone"><div class="dot" data-day="49">5</div><div><b>V2.0</b><div class="small">图片辅助诊断</div></div></div>
+      <div class="milestone"><div class="dot" data-day="56">6</div><div><b>公开版</b><div class="small">产品化并正式发布</div></div></div>
+    </div>
+
+    <div class="card">
+      <div class="week-head"><h3>3D 打印测试与质量分析</h3><span class="badge">第二项目</span></div>
+      <p class="muted">用真实打印实验、测试用例、Bug 报告、CSV 数据和 Python 图表建立“智能硬件测试”能力。</p>
+      <div class="milestone"><div class="dot" data-day="63">1</div><div><b>测试周报</b><div class="small">真实测试数据 + 异常记录</div></div></div>
+      <div class="milestone"><div class="dot" data-day="70">2</div><div><b>数据分析项目</b><div class="small">pandas + matplotlib + 报告</div></div></div>
+    </div>
+
+    <div class="card">
+      <div class="week-head"><h3>机器人 / 具身智能入口</h3><span class="badge">试探方向</span></div>
+      <p class="muted">最后一周只做 ROS2 入门，不提前卷复杂算法。目的是判断你是否愿意继续深入机器人方向。</p>
+      <div class="milestone"><div class="dot" data-day="84">✓</div><div><b>第一次虚拟机器人控制</b><div class="small">ROS2 通信 + turtlesim</div></div></div>
+    </div>
+  </section>
+
+  <section class="page" id="review">
+    <div class="section-title">本周复盘</div>
+    <div class="card">
+      <label>1. 这周我完成了什么？</label><textarea data-review="r1"></textarea>
+      <label>2. 有什么现在可以展示？</label><textarea data-review="r2"></textarea>
+      <label>3. 遇到了什么问题？</label><textarea data-review="r3"></textarea>
+      <label>4. 哪些知识其实没必要学？</label><textarea data-review="r4"></textarea>
+      <label>5. 下周唯一最重要的成果是什么？</label><textarea data-review="r5"></textarea>
+      <button id="saveReview" style="margin-top:12px;width:100%">保存本周复盘</button>
+    </div>
+    <div class="card">
+      <b>执行原则</b>
+      <p class="muted">每天留下可见成果；项目时间大于教程时间；卡住 30–60 分钟再求助；某天延期就顺延，不重开计划。</p>
+    </div>
+  </section>
+
+  <section class="page" id="settings">
+    <div class="section-title">计划设置</div>
+    <div class="card">
+      <label>计划起始日期</label>
+      <input type="date" id="startDate">
+      <label>已顺延天数</label>
+      <input type="number" id="delayDays" min="0" step="1">
+      <div class="actions"><button id="saveSettings">保存设置</button><button class="secondary" id="jumpCurrent">跳到当前进度</button></div>
+    </div>
+
+    <div class="section-title">数据备份</div>
+    <div class="card">
+      <div class="actions"><button id="exportData">导出数据</button><button class="secondary" id="importBtn">导入数据</button></div>
+      <input type="file" id="importFile" accept="application/json" class="hidden">
+      <p class="small">进度默认只保存在当前浏览器。换手机/清浏览器前建议导出 JSON 备份。</p>
+    </div>
+
+    <div class="section-title">危险操作</div>
+    <div class="card">
+      <button class="secondary" id="resetAll" style="width:100%">清空全部进度与备注</button>
+    </div>
+  </section>
+</div>
+
+<nav class="tabs">
+  <div class="tabs-inner">
+    <div class="tab active" data-page="today"><span class="ico">⌂</span>今天</div>
+    <div class="tab" data-page="plan"><span class="ico">☷</span>计划</div>
+    <div class="tab" data-page="projects"><span class="ico">◆</span>项目</div>
+    <div class="tab" data-page="review"><span class="ico">✎</span>复盘</div>
+    <div class="tab" data-page="settings"><span class="ico">⚙</span>设置</div>
+  </div>
+</nav>
+<div class="toast" id="toast"></div>
+
+<script>
+const DAYS = [{"day": 1, "week": 1, "weekTitle": "恢复 Python：重新会写程序", "weekGoal": "完成 PrintDoctor V0.1，能从命令行选择故障并输出基础诊断。", "title": "开发环境与第一段 Python", "learn": "安装/确认 Python、VS Code；理解 .py 文件、print()、input()、变量。", "deliverable": "创建并运行一个 .py 文件；完成“输入名字+打印故障→输出结果”的小程序。"}, {"day": 2, "week": 1, "weekTitle": "恢复 Python：重新会写程序", "weekGoal": "完成 PrintDoctor V0.1，能从命令行选择故障并输出基础诊断。", "title": "条件判断", "learn": "学习字符串、数字、if / elif / else、==。", "deliverable": "让 PrintDoctor 能根据 1/2/3/4 返回“首层不粘/翘边/拉丝/堵头”。"}, {"day": 3, "week": 1, "weekTitle": "恢复 Python：重新会写程序", "weekGoal": "完成 PrintDoctor V0.1，能从命令行选择故障并输出基础诊断。", "title": "列表与字典", "learn": "学习 list、dict、for；理解如何批量保存问题和诊断信息。", "deliverable": "把故障名称、原因、建议放进列表/字典，不再全部写死在 if 里。"}, {"day": 4, "week": 1, "weekTitle": "恢复 Python：重新会写程序", "weekGoal": "完成 PrintDoctor V0.1，能从命令行选择故障并输出基础诊断。", "title": "函数", "learn": "学习函数、参数、返回值；理解为什么要拆函数。", "deliverable": "写出 diagnose(problem) 之类的函数，并用于诊断。"}, {"day": 5, "week": 1, "weekTitle": "恢复 Python：重新会写程序", "weekGoal": "完成 PrintDoctor V0.1，能从命令行选择故障并输出基础诊断。", "title": "JSON 与文件", "learn": "理解数据为什么不全写在代码里；学习读取 JSON。", "deliverable": "建立 problems.json，保存故障、可能原因、解决方案，并让 Python 读取。"}, {"day": 6, "week": 1, "weekTitle": "恢复 Python：重新会写程序", "weekGoal": "完成 PrintDoctor V0.1，能从命令行选择故障并输出基础诊断。", "title": "第一次整合", "learn": "不学新知识，只整合前 5 天。", "deliverable": "实现：运行→选择故障→填写材料/温度→读取知识库→输出建议。"}, {"day": 7, "week": 1, "weekTitle": "恢复 Python：重新会写程序", "weekGoal": "完成 PrintDoctor V0.1，能从命令行选择故障并输出基础诊断。", "title": "周结算", "learn": "回顾代码；标记 AI 帮写但自己不懂的部分。", "deliverable": "建立 学习记录.md，写清：本周完成、已理解、仍不理解。"}, {"day": 8, "week": 2, "weekTitle": "让代码像真正项目", "weekGoal": "把 PrintDoctor 上传 GitHub，形成 V0.2。", "title": "Git 本地版本管理", "learn": "理解 Git 的用途；学习 git init/status/add/commit。", "deliverable": "完成第一次 commit。"}, {"day": 9, "week": 2, "weekTitle": "让代码像真正项目", "weekGoal": "把 PrintDoctor 上传 GitHub，形成 V0.2。", "title": "GitHub", "learn": "创建/整理 GitHub；建立 PrintDoctor 仓库。", "deliverable": "把项目第一次上传 GitHub。"}, {"day": 10, "week": 2, "weekTitle": "让代码像真正项目", "weekGoal": "把 PrintDoctor 上传 GitHub，形成 V0.2。", "title": "依赖与环境", "learn": "学习 pip、第三方库、虚拟环境、requirements.txt。", "deliverable": "让别人能根据 requirements.txt 安装项目依赖。"}, {"day": 11, "week": 2, "weekTitle": "让代码像真正项目", "weekGoal": "把 PrintDoctor 上传 GitHub，形成 V0.2。", "title": "项目结构", "learn": "理解 app.py、data/、README.md、requirements.txt 的作用。", "deliverable": "把 PrintDoctor 整理成清晰的文件夹结构。"}, {"day": 12, "week": 2, "weekTitle": "让代码像真正项目", "weekGoal": "把 PrintDoctor 上传 GitHub，形成 V0.2。", "title": "错误处理", "learn": "处理空输入、错误输入、不存在选项。", "deliverable": "输入异常时程序不崩溃，并给出可理解提示。"}, {"day": 13, "week": 2, "weekTitle": "让代码像真正项目", "weekGoal": "把 PrintDoctor 上传 GitHub，形成 V0.2。", "title": "扩大知识库", "learn": "整理常见 3D 打印故障。", "deliverable": "至少录入 10 种故障，每种含表现、原因、检查步骤、解决方法。"}, {"day": 14, "week": 2, "weekTitle": "让代码像真正项目", "weekGoal": "把 PrintDoctor 上传 GitHub，形成 V0.2。", "title": "发布 V0.2", "learn": "整理 GitHub README。", "deliverable": "README 包含：项目是什么、为什么做、功能、运行方式、当前版本、下一步。"}, {"day": 15, "week": 3, "weekTitle": "做出网页界面", "weekGoal": "用 Streamlit 把命令行工具变成可操作网页，并录制第一个 Demo。", "title": "认识 Streamlit", "learn": "学习安装、启动、st.title、st.write。", "deliverable": "浏览器显示 PrintDoctor 标题和简介。"}, {"day": 16, "week": 3, "weekTitle": "做出网页界面", "weekGoal": "用 Streamlit 把命令行工具变成可操作网页，并录制第一个 Demo。", "title": "输入组件", "learn": "学习输入框、下拉菜单、按钮。", "deliverable": "页面能填写材料、打印机、故障类型。"}, {"day": 17, "week": 3, "weekTitle": "做出网页界面", "weekGoal": "用 Streamlit 把命令行工具变成可操作网页，并录制第一个 Demo。", "title": "页面布局", "learn": "学习基本布局。", "deliverable": "做出“左边参数、右边诊断结果”的简单界面。"}, {"day": 18, "week": 3, "weekTitle": "做出网页界面", "weekGoal": "用 Streamlit 把命令行工具变成可操作网页，并录制第一个 Demo。", "title": "连接知识库", "learn": "把 JSON 数据接进网页。", "deliverable": "点击“开始诊断”后能查询并显示对应建议。"}, {"day": 19, "week": 3, "weekTitle": "做出网页界面", "weekGoal": "用 Streamlit 把命令行工具变成可操作网页，并录制第一个 Demo。", "title": "补充参数", "learn": "加入喷嘴温度、热床温度、材料、打印机型号。", "deliverable": "这些参数能被正常读取和展示。"}, {"day": 20, "week": 3, "weekTitle": "做出网页界面", "weekGoal": "用 Streamlit 把命令行工具变成可操作网页，并录制第一个 Demo。", "title": "连续测试", "learn": "故意进行错误和边界输入。", "deliverable": "至少测试 20 次，记录并修复明显 Bug。"}, {"day": 21, "week": 3, "weekTitle": "做出网页界面", "weekGoal": "用 Streamlit 把命令行工具变成可操作网页，并录制第一个 Demo。", "title": "第一个 Demo", "learn": "录制 30–60 秒演示。", "deliverable": "完整演示：打开网页→填参数→诊断→得到建议。"}, {"day": 22, "week": 4, "weekTitle": "把玩具变成工具", "weekGoal": "形成 PrintDoctor V1.0，并第一次公开展示。", "title": "故障分类", "learn": "整理首层、挤出、温度、运动、耗材、表面质量、结构强度等分类。", "deliverable": "知识库拥有清晰分类。"}, {"day": 23, "week": 4, "weekTitle": "把玩具变成工具", "weekGoal": "形成 PrintDoctor V1.0，并第一次公开展示。", "title": "扩充到 15 种故障", "learn": "用自己的理解重写内容，避免机械复制。", "deliverable": "至少 15 种故障条目。"}, {"day": 24, "week": 4, "weekTitle": "把玩具变成工具", "weekGoal": "形成 PrintDoctor V1.0，并第一次公开展示。", "title": "加入排查顺序", "learn": "从“可能原因列表”升级到“先查什么、再查什么”。", "deliverable": "每个主要故障至少有 3 步排查顺序。"}, {"day": 25, "week": 4, "weekTitle": "把玩具变成工具", "weekGoal": "形成 PrintDoctor V1.0，并第一次公开展示。", "title": "测试案例", "learn": "设计输入与预期输出。", "deliverable": "至少完成 10 个测试案例。"}, {"day": 26, "week": 4, "weekTitle": "把玩具变成工具", "weekGoal": "形成 PrintDoctor V1.0，并第一次公开展示。", "title": "模拟新手使用", "learn": "让自己或他人按新手视角使用。", "deliverable": "记录至少 5 个不清楚或不好用的地方。"}, {"day": 27, "week": 4, "weekTitle": "把玩具变成工具", "weekGoal": "形成 PrintDoctor V1.0，并第一次公开展示。", "title": "修复与发布", "learn": "处理反馈。", "deliverable": "发布 PrintDoctor V1.0。"}, {"day": 28, "week": 4, "weekTitle": "把玩具变成工具", "weekGoal": "形成 PrintDoctor V1.0，并第一次公开展示。", "title": "第一次内容发布", "learn": "制作简单项目介绍。", "deliverable": "在 B站/抖音/小红书任选一个平台发布或准备发布。"}, {"day": 29, "week": 5, "weekTitle": "接入 AI API", "weekGoal": "让 PrintDoctor 能结合参数与知识库生成更自然的诊断建议。", "title": "理解 API", "learn": "理解 API、请求、响应、API Key、JSON。", "deliverable": "能用自己的话解释 API 是什么。"}, {"day": 30, "week": 5, "weekTitle": "接入 AI API", "weekGoal": "让 PrintDoctor 能结合参数与知识库生成更自然的诊断建议。", "title": "第一次模型调用", "learn": "用 Python 调用一个大模型 API。", "deliverable": "输入问题→发送请求→收到回答。"}, {"day": 31, "week": 5, "weekTitle": "接入 AI API", "weekGoal": "让 PrintDoctor 能结合参数与知识库生成更自然的诊断建议。", "title": "Prompt 基础", "learn": "比较模糊问题和结构化提示的区别。", "deliverable": "写出一个适合 3D 打印诊断的 Prompt。"}, {"day": 32, "week": 5, "weekTitle": "接入 AI API", "weekGoal": "让 PrintDoctor 能结合参数与知识库生成更自然的诊断建议。", "title": "固定回答结构", "learn": "规定问题判断、可能原因、排查顺序、建议、注意事项。", "deliverable": "模型输出结构稳定。"}, {"day": 33, "week": 5, "weekTitle": "接入 AI API", "weekGoal": "让 PrintDoctor 能结合参数与知识库生成更自然的诊断建议。", "title": "结构化输出", "learn": "让 AI 返回程序可读取的数据。", "deliverable": "能解析 JSON 或类似结构化结果。"}, {"day": 34, "week": 5, "weekTitle": "接入 AI API", "weekGoal": "让 PrintDoctor 能结合参数与知识库生成更自然的诊断建议。", "title": "接入 PrintDoctor", "learn": "把用户参数+本地知识库交给 AI 综合分析。", "deliverable": "网页能显示 AI 诊断结果。"}, {"day": 35, "week": 5, "weekTitle": "接入 AI API", "weekGoal": "让 PrintDoctor 能结合参数与知识库生成更自然的诊断建议。", "title": "AI 测试周", "learn": "用不同输入反复测试。", "deliverable": "至少 20 个输入，记录好回答/胡说/过于笼统的情况。"}, {"day": 36, "week": 6, "weekTitle": "提高 AI 可靠性", "weekGoal": "形成 PrintDoctor V1.5，加入知识库优先和反馈机制。", "title": "认识幻觉", "learn": "理解大模型可能编造；加“不确定就说明”的规则。", "deliverable": "明显减少装懂式回答。"}, {"day": 37, "week": 6, "weekTitle": "提高 AI 可靠性", "weekGoal": "形成 PrintDoctor V1.5，加入知识库优先和反馈机制。", "title": "知识库优先", "learn": "让 AI 优先依据已有知识回答。", "deliverable": "诊断结果能体现本地知识库内容。"}, {"day": 38, "week": 6, "weekTitle": "提高 AI 可靠性", "weekGoal": "形成 PrintDoctor V1.5，加入知识库优先和反馈机制。", "title": "API 异常处理", "learn": "处理网络断开、API 失败、无返回。", "deliverable": "异常时程序不崩溃。"}, {"day": 39, "week": 6, "weekTitle": "提高 AI 可靠性", "weekGoal": "形成 PrintDoctor V1.5，加入知识库优先和反馈机制。", "title": "反馈按钮", "learn": "加入“有帮助/没解决”。", "deliverable": "反馈能被保存。"}, {"day": 40, "week": 6, "weekTitle": "提高 AI 可靠性", "weekGoal": "形成 PrintDoctor V1.5，加入知识库优先和反馈机制。", "title": "材料差异", "learn": "整理 PLA、PETG、ABS、TPU 的基础差异。", "deliverable": "不同材料至少有基础差异化建议。"}, {"day": 41, "week": 6, "weekTitle": "提高 AI 可靠性", "weekGoal": "形成 PrintDoctor V1.5，加入知识库优先和反馈机制。", "title": "发布 V1.5", "learn": "修复问题并整理版本。", "deliverable": "GitHub 更新到 V1.5。"}, {"day": 42, "week": 6, "weekTitle": "提高 AI 可靠性", "weekGoal": "形成 PrintDoctor V1.5，加入知识库优先和反馈机制。", "title": "第二条 Demo", "learn": "展示规则版与 AI 版区别。", "deliverable": "形成一条新的演示视频素材。"}, {"day": 43, "week": 7, "weekTitle": "让程序会“看”", "weekGoal": "完成 PrintDoctor V2.0，支持上传失败照片辅助诊断。", "title": "图片上传", "learn": "学习接收和读取图片。", "deliverable": "网页可以上传打印失败照片。"}, {"day": 44, "week": 7, "weekTitle": "让程序会“看”", "weekGoal": "完成 PrintDoctor V2.0，支持上传失败照片辅助诊断。", "title": "多模态 AI", "learn": "理解模型如何同时看图片和文字。", "deliverable": "上传图片后得到基础描述。"}, {"day": 45, "week": 7, "weekTitle": "让程序会“看”", "weekGoal": "完成 PrintDoctor V2.0，支持上传失败照片辅助诊断。", "title": "图片诊断 Prompt", "learn": "要求模型描述现象、判断问题、说明不确定性、给出检查方法。", "deliverable": "得到结构化图片诊断。"}, {"day": 46, "week": 7, "weekTitle": "让程序会“看”", "weekGoal": "完成 PrintDoctor V2.0，支持上传失败照片辅助诊断。", "title": "图片+参数", "learn": "把照片、材料、温度、打印机型号一起分析。", "deliverable": "实现综合诊断。"}, {"day": 47, "week": 7, "weekTitle": "让程序会“看”", "weekGoal": "完成 PrintDoctor V2.0，支持上传失败照片辅助诊断。", "title": "困难案例", "learn": "测试模糊、暗光、多个问题等图片。", "deliverable": "记录模型容易出错的情况。"}, {"day": 48, "week": 7, "weekTitle": "让程序会“看”", "weekGoal": "完成 PrintDoctor V2.0，支持上传失败照片辅助诊断。", "title": "补充信息机制", "learn": "图片不足时主动要求用户补充信息。", "deliverable": "诊断失败时也能给出下一步。"}, {"day": 49, "week": 7, "weekTitle": "让程序会“看”", "weekGoal": "完成 PrintDoctor V2.0，支持上传失败照片辅助诊断。", "title": "发布 V2.0", "learn": "整理并发布。", "deliverable": "GitHub/演示明确展示“图片辅助诊断”。"}, {"day": 50, "week": 8, "weekTitle": "产品化", "weekGoal": "让第一次使用的人能看懂、能操作、能反馈。", "title": "代码整理", "learn": "删除无用文件、测试代码、重复逻辑。", "deliverable": "项目结构更干净。"}, {"day": 51, "week": 8, "weekTitle": "产品化", "weekGoal": "让第一次使用的人能看懂、能操作、能反馈。", "title": "首页与引导", "learn": "说明工具做什么、怎么用。", "deliverable": "新用户打开就知道下一步。"}, {"day": 52, "week": 8, "weekTitle": "产品化", "weekGoal": "让第一次使用的人能看懂、能操作、能反馈。", "title": "优化结果展示", "learn": "把长篇 AI 文字改成原因/优先检查/参数建议/下一步。", "deliverable": "结果更像工具而不是聊天。"}, {"day": 53, "week": 8, "weekTitle": "产品化", "weekGoal": "让第一次使用的人能看懂、能操作、能反馈。", "title": "新手模式", "learn": "减少术语，用简单语言解释。", "deliverable": "新手版诊断可用。"}, {"day": 54, "week": 8, "weekTitle": "产品化", "weekGoal": "让第一次使用的人能看懂、能操作、能反馈。", "title": "反馈记录", "learn": "保存问题类型、诊断结果、是否解决。", "deliverable": "能形成真实反馈数据。"}, {"day": 55, "week": 8, "weekTitle": "产品化", "weekGoal": "让第一次使用的人能看懂、能操作、能反馈。", "title": "真实数据统计", "learn": "统计已支持故障、测试案例、真实使用次数等。", "deliverable": "只记录真实数字。"}, {"day": 56, "week": 8, "weekTitle": "产品化", "weekGoal": "让第一次使用的人能看懂、能操作、能反馈。", "title": "公开发布", "learn": "整理 GitHub 与内容平台。", "deliverable": "完成一次正式公开发布。"}, {"day": 57, "week": 9, "weekTitle": "进入测试工程思维", "weekGoal": "开始第二个项目：3D 打印设备测试与质量分析。", "title": "测试基本概念", "learn": "学习测试用例、Bug、复现步骤、预期结果、实际结果。", "deliverable": "能按模板写一个 Bug。"}, {"day": 58, "week": 9, "weekTitle": "进入测试工程思维", "weekGoal": "开始第二个项目：3D 打印设备测试与质量分析。", "title": "设计测试表", "learn": "选定自己的打印机与测试维度。", "deliverable": "形成首层/速度/温度/回抽/材料/稳定性测试表。"}, {"day": 59, "week": 9, "weekTitle": "进入测试工程思维", "weekGoal": "开始第二个项目：3D 打印设备测试与质量分析。", "title": "单变量实验", "learn": "理解一次只改变一个变量。", "deliverable": "设计第一组可重复实验。"}, {"day": 60, "week": 9, "weekTitle": "进入测试工程思维", "weekGoal": "开始第二个项目：3D 打印设备测试与质量分析。", "title": "执行测试 1", "learn": "实际打印、拍照、保存模型、记录参数。", "deliverable": "得到第一批真实数据。"}, {"day": 61, "week": 9, "weekTitle": "进入测试工程思维", "weekGoal": "开始第二个项目：3D 打印设备测试与质量分析。", "title": "执行测试 2", "learn": "继续实验并记录异常。", "deliverable": "至少写 1 份规范 Bug/异常报告。"}, {"day": 62, "week": 9, "weekTitle": "进入测试工程思维", "weekGoal": "开始第二个项目：3D 打印设备测试与质量分析。", "title": "数据规范化", "learn": "整理 CSV/Excel。", "deliverable": "形成字段统一的数据表。"}, {"day": 63, "week": 9, "weekTitle": "进入测试工程思维", "weekGoal": "开始第二个项目：3D 打印设备测试与质量分析。", "title": "测试周报", "learn": "总结本周测试。", "deliverable": "完成第一份 3D 打印测试周报。"}, {"day": 64, "week": 10, "weekTitle": "用 Python 分析测试数据", "weekGoal": "把真实测试数据变成图表与结论。", "title": "pandas 入门", "learn": "学习 DataFrame、读取 CSV、查看数据。", "deliverable": "Python 能读自己的测试表。"}, {"day": 65, "week": 10, "weekTitle": "用 Python 分析测试数据", "weekGoal": "把真实测试数据变成图表与结论。", "title": "筛选与统计", "learn": "学习筛选、排序、平均值、最大最小。", "deliverable": "能回答基础数据问题。"}, {"day": 66, "week": 10, "weekTitle": "用 Python 分析测试数据", "weekGoal": "把真实测试数据变成图表与结论。", "title": "分析真实数据", "learn": "不使用网上数据集。", "deliverable": "完成至少 2 个有意义的分析。"}, {"day": 67, "week": 10, "weekTitle": "用 Python 分析测试数据", "weekGoal": "把真实测试数据变成图表与结论。", "title": "matplotlib 入门", "learn": "学习最基础绘图。", "deliverable": "成功画出第一张图。"}, {"day": 68, "week": 10, "weekTitle": "用 Python 分析测试数据", "weekGoal": "把真实测试数据变成图表与结论。", "title": "项目图表", "learn": "选择真正有意义的关系。", "deliverable": "完成速度→时间、温度→质量等图表中的至少 2 张。"}, {"day": 69, "week": 10, "weekTitle": "用 Python 分析测试数据", "weekGoal": "把真实测试数据变成图表与结论。", "title": "分析报告", "learn": "把数据、图片、图表、结论写成报告。", "deliverable": "形成可展示报告。"}, {"day": 70, "week": 10, "weekTitle": "用 Python 分析测试数据", "weekGoal": "把真实测试数据变成图表与结论。", "title": "上传第二个项目", "learn": "整理仓库。", "deliverable": "GitHub 至少有两个完整项目。"}, {"day": 71, "week": 11, "weekTitle": "把项目转换成求职资产", "weekGoal": "让市场需求反过来指导下一阶段学习。", "title": "研究 20 个岗位", "learn": "范围：3D打印、智能硬件测试、软件测试、技术支持、机器人测试/应用。", "deliverable": "保存 20 个真实岗位及要求。"}, {"day": 72, "week": 11, "weekTitle": "把项目转换成求职资产", "weekGoal": "让市场需求反过来指导下一阶段学习。", "title": "关键词统计", "learn": "统计 Python、Linux、测试、ROS2、C++ 等出现次数。", "deliverable": "形成岗位技能关键词表。"}, {"day": 73, "week": 11, "weekTitle": "把项目转换成求职资产", "weekGoal": "让市场需求反过来指导下一阶段学习。", "title": "项目简历化", "learn": "按“做了什么/用了什么/解决什么/结果”写。", "deliverable": "两个项目各完成一版简历描述。"}, {"day": 74, "week": 11, "weekTitle": "把项目转换成求职资产", "weekGoal": "让市场需求反过来指导下一阶段学习。", "title": "更新整份简历", "learn": "把经历围绕智能硬件/3D打印/软件/AI应用串起来。", "deliverable": "形成新简历版本。"}, {"day": 75, "week": 11, "weekTitle": "把项目转换成求职资产", "weekGoal": "让市场需求反过来指导下一阶段学习。", "title": "作品页", "learn": "整理个人介绍、PrintDoctor、测试项目、GitHub、Demo。", "deliverable": "有一个可发给招聘方的作品入口。"}, {"day": 76, "week": 11, "weekTitle": "把项目转换成求职资产", "weekGoal": "让市场需求反过来指导下一阶段学习。", "title": "项目面试题", "learn": "准备为什么做、AI作用、代码归属、最大 Bug、技术选择、重做会改什么。", "deliverable": "每题都能讲 1–2 分钟。"}, {"day": 77, "week": 11, "weekTitle": "把项目转换成求职资产", "weekGoal": "让市场需求反过来指导下一阶段学习。", "title": "模拟面试", "learn": "完整模拟一次并记录不会的。", "deliverable": "生成下一轮补强清单。"}, {"day": 78, "week": 12, "weekTitle": "第一次试探机器人/具身智能", "weekGoal": "完成 ROS2 基础通信与第一次虚拟机器人控制。", "title": "Linux 基础命令", "learn": "学习 cd、ls、mkdir、cp、mv、rm、pwd。", "deliverable": "能独立完成目录和文件操作。"}, {"day": 79, "week": 12, "weekTitle": "第一次试探机器人/具身智能", "weekGoal": "完成 ROS2 基础通信与第一次虚拟机器人控制。", "title": "认识 ROS2", "learn": "只理解 Node、Topic、发布/订阅。", "deliverable": "能用自己的话解释 ROS2 在机器人里做什么。"}, {"day": 80, "week": 12, "weekTitle": "第一次试探机器人/具身智能", "weekGoal": "完成 ROS2 基础通信与第一次虚拟机器人控制。", "title": "配置 ROS2", "learn": "按官方版本配置环境并运行基础示例。", "deliverable": "官方示例能跑通。"}, {"day": 81, "week": 12, "weekTitle": "第一次试探机器人/具身智能", "weekGoal": "完成 ROS2 基础通信与第一次虚拟机器人控制。", "title": "两个节点通信", "learn": "一个发送，一个接收。", "deliverable": "看到消息从程序 A 到程序 B。"}, {"day": 82, "week": 12, "weekTitle": "第一次试探机器人/具身智能", "weekGoal": "完成 ROS2 基础通信与第一次虚拟机器人控制。", "title": "修改示例", "learn": "发送自定义 move_forward 等命令。", "deliverable": "接收端正确显示机器人命令。"}, {"day": 83, "week": 12, "weekTitle": "第一次试探机器人/具身智能", "weekGoal": "完成 ROS2 基础通信与第一次虚拟机器人控制。", "title": "turtlesim", "learn": "运行并控制虚拟小乌龟。", "deliverable": "第一次亲手控制虚拟机器人移动。"}, {"day": 84, "week": 12, "weekTitle": "第一次试探机器人/具身智能", "weekGoal": "完成 ROS2 基础通信与第一次虚拟机器人控制。", "title": "总复盘", "learn": "不学新知识；回顾 84 天所有资产。", "deliverable": "列出已完成能力、作品、简历变化，并决定下一阶段方向。"}];
+const KEY='growth84_app_v2';
+let state = JSON.parse(localStorage.getItem(KEY) || '{}');
+state.done = state.done || {};
+state.notes = state.notes || {};
+state.review = state.review || {};
+state.startDate = state.startDate || '2026-09-23';
+state.delayDays = Number(state.delayDays || 0);
+state.theme = state.theme || 'light';
+
+function save(){ localStorage.setItem(KEY, JSON.stringify(state)); }
+function toast(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),1500); }
+function completedCount(){ return Object.values(state.done).filter(Boolean).length; }
+function currentDayNumber(){
+  const s=new Date(state.startDate+'T00:00:00');
+  const now=new Date();
+  const today=new Date(now.getFullYear(),now.getMonth(),now.getDate());
+  const diff=Math.floor((today-s)/86400000)+1-state.delayDays;
+  return Math.max(1,Math.min(84,diff));
+}
+function nextIncompleteFrom(n){
+  for(let i=Math.max(1,n);i<=84;i++) if(!state.done[i]) return i;
+  for(let i=1;i<Math.max(1,n);i++) if(!state.done[i]) return i;
+  return 84;
+}
+function effectiveToday(){
+  return nextIncompleteFrom(currentDayNumber());
+}
+function applyTheme(){
+  document.documentElement.classList.toggle('dark', state.theme==='dark');
+}
+function renderToday(){
+  const dnum=effectiveToday();
+  const d=DAYS[dnum-1];
+  const done=completedCount(), pct=Math.round(done/84*100);
+  document.getElementById('todayKicker').textContent=`WEEK ${d.week} · DAY ${d.day}`;
+  document.getElementById('todayTitle').textContent= done>=84 ? '84 天计划已完成' : '今天只做这一件事';
+  document.getElementById('todayWeek').textContent=`${d.weekTitle}`;
+  document.getElementById('todayDay').textContent=`DAY ${d.day}`;
+  document.getElementById('todayTask').textContent=d.title;
+  document.getElementById('todayLearn').textContent=d.learn;
+  document.getElementById('todayDeliver').textContent=d.deliverable;
+  document.getElementById('todayNote').value=state.notes[dnum]||'';
+  document.getElementById('todayProgress').style.width=pct+'%';
+  document.getElementById('statDone').textContent=done;
+  document.getElementById('statLeft').textContent=84-done;
+  document.getElementById('statPct').textContent=pct+'%';
+  document.getElementById('todayCard').classList.toggle('done-card', !!state.done[dnum]);
+  document.getElementById('completeToday').textContent=state.done[dnum]?'取消完成':'完成今天';
+  document.getElementById('completeToday').onclick=()=>{
+    state.done[dnum]=!state.done[dnum]; save(); renderAll(); toast(state.done[dnum]?'已完成':'已取消');
+  };
+  document.getElementById('todayNote').oninput=e=>{ state.notes[dnum]=e.target.value; save(); };
+}
+function renderPlan(){
+  const q=document.getElementById('search').value.trim().toLowerCase();
+  let html='';
+  for(let w=1;w<=12;w++) {
+    const arr=DAYS.filter(d=>d.week===w && (!q || (d.title+d.learn+d.deliverable+d.weekTitle).toLowerCase().includes(q)));
+    if(!arr.length) continue;
+    const count=arr.filter(d=>state.done[d.day]).length;
+    html += `<div class="card"><div class="week-head"><div><h3>第 ${w} 周｜${arr[0].weekTitle}</h3><div class="small">${arr[0].weekGoal}</div></div><span class="badge">${count} / ${arr.length}</span></div><ul class="day-list">`;
+    arr.forEach(d=>{
+      html += `<li class="day-item">
+        <div class="check ${state.done[d.day]?'on':''}" data-check="${d.day}">${state.done[d.day]?'✓':''}</div>
+        <div class="day-main"><div class="day-name">Day ${d.day} · ${d.title}</div>
+        <div class="day-meta">${d.deliverable}</div>
+        <details><summary>查看当天学习内容</summary><p class="small">${d.learn}</p><textarea data-note="${d.day}" placeholder="当天备注…">${(state.notes[d.day]||'').replace(/</g,'&lt;')}</textarea></details>
+        </div></li>`;
+    });
+    html += '</ul></div>';
+  }
+  document.getElementById('weekList').innerHTML=html || '<div class="card">没有匹配内容</div>';
+  document.querySelectorAll('[data-check]').forEach(el=>el.onclick=()=>{const n=Number(el.dataset.check);state.done[n]=!state.done[n];save();renderAll();});
+  document.querySelectorAll('[data-note]').forEach(el=>el.oninput=e=>{state.notes[Number(el.dataset.note)]=e.target.value;save();});
+}
+function renderProjects(){
+  document.querySelectorAll('.dot[data-day]').forEach(el=>{
+    const n=Number(el.dataset.day);
+    const ok = completedCount()>=n || state.done[n];
+    el.classList.toggle('ok', ok);
+  });
+}
+function renderReview(){
+  document.querySelectorAll('[data-review]').forEach(el=>{el.value=state.review[el.dataset.review]||'';});
+}
+function renderSettings(){
+  document.getElementById('startDate').value=state.startDate;
+  document.getElementById('delayDays').value=state.delayDays;
+}
+function renderAll(){applyTheme();renderToday();renderPlan();renderProjects();renderReview();renderSettings();}
+document.getElementById('search').oninput=renderPlan;
+document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{
+  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));t.classList.add('active');
+  document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));document.getElementById(t.dataset.page).classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+});
+document.getElementById('themeBtn').onclick=()=>{state.theme=state.theme==='dark'?'light':'dark';save();applyTheme();};
+document.getElementById('delayOne').onclick=()=>{state.delayDays++;save();renderAll();toast('计划已顺延 1 天');};
+document.getElementById('saveSettings').onclick=()=>{state.startDate=document.getElementById('startDate').value||state.startDate;state.delayDays=Math.max(0,Number(document.getElementById('delayDays').value||0));save();renderAll();toast('设置已保存');};
+document.getElementById('jumpCurrent').onclick=()=>{document.querySelector('[data-page="today"]').click();};
+document.getElementById('saveReview').onclick=()=>{document.querySelectorAll('[data-review]').forEach(el=>state.review[el.dataset.review]=el.value);save();toast('复盘已保存');};
+document.getElementById('exportData').onclick=()=>{
+  const blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='84天成长计划_备份.json';a.click();URL.revokeObjectURL(a.href);
+};
+document.getElementById('importBtn').onclick=()=>document.getElementById('importFile').click();
+document.getElementById('importFile').onchange=e=>{
+  const f=e.target.files[0];if(!f)return;
+  const r=new FileReader();r.onload=()=>{try{state=JSON.parse(r.result);save();renderAll();toast('导入成功');}catch(err){alert('备份文件无法读取');}};r.readAsText(f);
+};
+document.getElementById('resetAll').onclick=()=>{if(confirm('确定清空全部进度、备注和复盘吗？')){localStorage.removeItem(KEY);location.reload();}};
+renderAll();
+if('serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('./sw.js').catch(()=>{});
+</script>
+</body>
+</html>
