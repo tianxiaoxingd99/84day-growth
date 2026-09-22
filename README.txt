@@ -1,20 +1,15 @@
-84天成长计划 App（PWA）
-======================
+84天成长计划 · 学习版 PWA v3
 
-文件说明
-- index.html：App 主界面
-- manifest.webmanifest：PWA 安装信息
-- sw.js：离线缓存
-- icon-192.png / icon-512.png：桌面图标
+升级重点
+- 每一天不再只是“任务名”，而是完整学习单元。
+- 每天包含：学习目标、按顺序执行的 5 个左右步骤、动手练习、验收标准、卡住先检查、搜索关键词。
+- 每个学习步骤可单独勾选。
+- 继续兼容旧版 localStorage key，部署到原 GitHub Pages 地址后，原有打卡/备注应继续保留。
+- Service Worker 缓存版本已升级为 v3。
 
-使用方式
-1. 直接使用：打开 index.html 即可查看计划与打卡（本地文件模式）。
-2. 安装到手机桌面：需要把整个文件夹部署到 HTTPS 静态网站后访问。
-   可使用 GitHub Pages、Cloudflare Pages、Vercel、Netlify 等静态托管。
-3. iPhone Safari：打开部署后的网址 → 分享 →“添加到主屏幕”。
-4. Android Chrome：打开部署后的网址 → 菜单 →“安装应用”或“添加到主屏幕”。
-
-数据
-- 进度和备注存储在浏览器 localStorage。
-- App 内“设置 → 导出数据”可备份为 JSON。
-- 更换浏览器/设备前建议导出备份。
+更新 GitHub Pages
+1. 解压 ZIP。
+2. 在原仓库中用本包的 index.html、manifest.webmanifest、sw.js、icon-192.png、icon-512.png 替换旧文件。
+3. Commit changes。
+4. 等 GitHub Pages 更新后，iPhone 上关闭并重新打开 App。
+5. 若仍显示旧页面：Safari 刷新一次站点，或稍后重新打开；PWA 缓存会更新到 v3。
